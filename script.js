@@ -408,126 +408,6 @@ keyboardStyle.textContent = `
 `;
 document.head.appendChild(keyboardStyle);
 
-// Funcionalidade do FAQ Accordion - sem animações
-function toggleFAQ(element) {
-    try {
-        console.log('toggleFAQ chamada para:', element);
-        
-        const faqItem = element.parentElement;
-        const faqAnswer = faqItem.querySelector('.faq-answer');
-        const faqIcon = element.querySelector('.faq-icon');
-        
-        console.log('faqItem:', faqItem);
-        console.log('faqAnswer:', faqAnswer);
-        console.log('faqIcon:', faqIcon);
-        
-        if (!faqAnswer || !faqIcon) {
-            console.error('Elementos do FAQ não encontrados');
-            return;
-        }
-        
-        // Verificar se o item atual já está ativo
-        const isCurrentlyActive = faqItem.classList.contains('active');
-        
-        // Fechar todos os outros itens primeiro
-        document.querySelectorAll('.faq-item').forEach(item => {
-            if (item !== faqItem) {
-                item.classList.remove('active');
-                const answer = item.querySelector('.faq-answer');
-                const icon = item.querySelector('.faq-icon');
-                if (answer && icon) {
-                    answer.classList.remove('active');
-                    // Ocultar resposta diretamente
-                    answer.style.setProperty('display', 'none', 'important');
-                    icon.style.transform = 'rotate(0deg)';
-                }
-            }
-        });
-        
-        // Toggle do item atual
-        if (isCurrentlyActive) {
-            // Fechar o item atual
-            faqItem.classList.remove('active');
-            faqAnswer.classList.remove('active');
-            // Ocultar resposta diretamente
-            faqAnswer.style.setProperty('display', 'none', 'important');
-            faqIcon.style.transform = 'rotate(0deg)';
-            element.setAttribute('aria-expanded', 'false');
-        } else {
-            // Abrir o item atual
-            faqItem.classList.add('active');
-            faqAnswer.classList.add('active');
-            // Mostrar resposta diretamente
-            faqAnswer.style.setProperty('display', 'block', 'important');
-            faqIcon.style.transform = 'rotate(45deg)';
-            element.setAttribute('aria-expanded', 'true');
-        }
-        
-        console.log('Item ativo:', !isCurrentlyActive);
-        console.log('Classes do item:', faqItem.className);
-        console.log('Classes da resposta:', faqAnswer.className);
-        console.log('Estilos inline da resposta:', {
-            display: faqAnswer.style.display
-        });
-        
-        // Verificar se os estilos foram aplicados
-        const computedStyle = window.getComputedStyle(faqAnswer);
-        console.log('Estilos computados da resposta:', {
-            display: computedStyle.display
-        });
-        
-    } catch (error) {
-        console.error('Erro ao alternar FAQ:', error);
-    }
-}
-
-// Adicionar funcionalidade de teclado para o FAQ
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' || e.key === ' ') {
-        const activeElement = document.activeElement;
-        if (activeElement.classList.contains('faq-question')) {
-            e.preventDefault();
-            toggleFAQ(activeElement);
-        }
-    }
-});
-
-// Adicionar funcionalidade de clique para todos os elementos FAQ
-document.addEventListener('DOMContentLoaded', function() {
-    // Adicionar event listeners para todos os elementos FAQ
-    document.querySelectorAll('.faq-question').forEach(question => {
-        question.addEventListener('click', function() {
-            toggleFAQ(this);
-        });
-        
-        // Adicionar suporte para teclado
-        question.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                toggleFAQ(this);
-            }
-        });
-    });
-});
-
-// Função para limpar formulário
-function limparFormulario() {
-    if (confirm('Tem certeza que deseja limpar todos os campos?')) {
-        const form = document.getElementById('testimonyForm');
-        form.reset();
-        document.getElementById('char-count').textContent = '0';
-        
-        // Limpa erros
-        clearAllErrors();
-        
-        // Esconde mensagem de status
-        const formMessage = document.getElementById('form-message');
-        if (formMessage) {
-            formMessage.style.display = 'none';
-        }
-    }
-}
-
 // Função de teste para o FAQ
 function testFAQ() {
     console.log('=== TESTE DO FAQ ===');
@@ -537,12 +417,10 @@ function testFAQ() {
     faqItems.forEach((item, index) => {
         const question = item.querySelector('.faq-question');
         const answer = item.querySelector('.faq-answer');
-        const icon = item.querySelector('.faq-icon');
         
         console.log(`Item ${index + 1}:`, {
             question: question ? '✅' : '❌',
             answer: answer ? '✅' : '❌',
-            icon: icon ? '✅' : '❌',
             classes: item.className
         });
     });
