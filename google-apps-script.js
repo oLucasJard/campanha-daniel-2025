@@ -18,10 +18,18 @@ function doPost(e) {
       newSheet.getRange(1, 1, 1, 6).setValues([['Timestamp', 'Nome', 'Email', 'Categoria', 'Testemunho', 'Autorizacao']]);
     }
     
+    // Processar o nome baseado na autorização
+    let nomeExibicao = '';
+    if (formData.Autorizacao === 'Sim' && formData.Nome && formData.Nome.trim() !== '') {
+      nomeExibicao = formData.Nome.trim();
+    } else {
+      nomeExibicao = 'Anônimo';
+    }
+    
     // Preparar dados para inserção
     const rowData = [
       formData.Timestamp || new Date().toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"}),
-      formData.Nome || '',
+      nomeExibicao,
       formData.Email || '',
       formData.Categoria || '',
       formData.Testemunho || '',

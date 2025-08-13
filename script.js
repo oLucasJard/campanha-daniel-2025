@@ -231,6 +231,18 @@ function submitToGoogleSheets() {
     // Adiciona timestamp
     document.getElementById('timestamp').value = new Date().toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"});
     
+    // Processa o status da autorização
+    const autorizacaoCheckbox = document.getElementById('autorizacao');
+    const nomeField = document.getElementById('nome');
+    
+    // Se não autorizar publicação, limpa o nome
+    if (!autorizacaoCheckbox.checked) {
+        nomeField.value = '';
+    }
+    
+    // Define o valor da autorização (Sim/Não)
+    autorizacaoCheckbox.value = autorizacaoCheckbox.checked ? 'Sim' : 'Não';
+    
     // Mostra mensagem de carregamento
     showFormMessage('Enviando seu testemunho, aguarde...', 'loading');
     
@@ -307,7 +319,8 @@ function validateField(field) {
     }
     
     if (field.type === 'text' && field.id === 'nome') {
-        if (field.value.length < 3) {
+        // Nome é opcional, mas se preenchido deve ter pelo menos 3 caracteres
+        if (field.value && field.value.length < 3) {
             isValid = false;
             errorMessage = 'O nome deve ter pelo menos 3 caracteres.';
         }

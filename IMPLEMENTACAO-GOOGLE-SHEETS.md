@@ -41,11 +41,17 @@ A planilha será criada automaticamente com as seguintes colunas:
 | Coluna | Descrição | Exemplo |
 |--------|-----------|---------|
 | Timestamp | Data e hora do envio | 15/01/2024 14:30:25 |
-| Nome | Nome completo | João Silva |
+| Nome | Nome completo ou "Anônimo" | João Silva / Anônimo |
 | Email | E-mail do participante | joao@email.com |
 | Categoria | Categoria do testemunho | Cura e Saúde |
 | Testemunho | Texto do testemunho | Durante a campanha... |
 | Autorizacao | Se autoriza publicação | Sim/Não |
+
+### **📝 Comportamento do Campo Nome**
+- **✅ Com autorização**: Nome é exibido normalmente
+- **❌ Sem autorização**: Nome é substituído por "Anônimo"
+- **🔄 Flexibilidade**: Usuário pode enviar testemunho sem nome
+- **🔒 Privacidade**: Respeita a escolha do usuário
 
 ## 🔧 **Configurações Importantes**
 
