@@ -943,54 +943,32 @@ section {
 }
 
 .faq-answer {
-    padding: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: all 0.4s ease;
+    display: none;
+    padding: 2rem;
     background: var(--bg-darker);
-    opacity: 0;
-    visibility: hidden;
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.3s ease;
 }
 
 .faq-answer.active {
-    padding: 2rem;
-    max-height: 1000px;
-    opacity: 1;
-    overflow: visible;
-    visibility: visible;
+    display: block;
 }
 
 /* Regra de teste para garantir visibilidade */
 .faq-answer.active {
     display: block !important;
-    max-height: none !important;
-    overflow: visible !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    height: auto !important;
 }
 
 /* Regras adicionais para garantir visibilidade */
 .faq-item.active .faq-answer {
     display: block !important;
-    max-height: none !important;
-    overflow: visible !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    height: auto !important;
-    padding: 2rem !important;
 }
 
 /* Forçar visibilidade com maior especificidade */
 div.faq-answer.active,
 div.faq-item.active div.faq-answer {
     display: block !important;
-    max-height: none !important;
-    overflow: visible !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    height: auto !important;
-    padding: 2rem !important;
 }
 
 .faq-answer p {
