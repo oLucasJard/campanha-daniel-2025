@@ -953,6 +953,15 @@ section {
 .faq-answer.active {
     padding: 2rem;
     max-height: 1000px;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Regra de teste para garantir visibilidade */
+.faq-answer.active {
+    display: block !important;
+    max-height: none !important;
+    overflow: visible !important;
 }
 
 .faq-answer p {

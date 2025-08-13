@@ -411,9 +411,15 @@ document.head.appendChild(keyboardStyle);
 // Funcionalidade do FAQ Accordion
 function toggleFAQ(element) {
     try {
+        console.log('toggleFAQ chamada para:', element);
+        
         const faqItem = element.parentElement;
         const faqAnswer = faqItem.querySelector('.faq-answer');
         const faqIcon = element.querySelector('.faq-icon');
+        
+        console.log('faqItem:', faqItem);
+        console.log('faqAnswer:', faqAnswer);
+        console.log('faqIcon:', faqIcon);
         
         if (!faqAnswer || !faqIcon) {
             console.error('Elementos do FAQ não encontrados');
@@ -434,8 +440,13 @@ function toggleFAQ(element) {
         });
         
         // Toggle do item atual
+        const wasActive = faqItem.classList.contains('active');
         faqItem.classList.toggle('active');
         faqAnswer.classList.toggle('active');
+        
+        console.log('Item ativo:', !wasActive);
+        console.log('Classes do item:', faqItem.className);
+        console.log('Classes da resposta:', faqAnswer.className);
         
         // Atualizar aria-expanded
         const isExpanded = faqAnswer.classList.contains('active');
