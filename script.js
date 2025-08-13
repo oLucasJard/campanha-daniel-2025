@@ -426,7 +426,10 @@ function toggleFAQ(element) {
             return;
         }
         
-        // Fechar todos os outros itens
+        // Verificar se o item atual já está ativo
+        const isCurrentlyActive = faqItem.classList.contains('active');
+        
+        // Fechar todos os outros itens primeiro
         document.querySelectorAll('.faq-item').forEach(item => {
             if (item !== faqItem) {
                 item.classList.remove('active');
@@ -440,23 +443,24 @@ function toggleFAQ(element) {
         });
         
         // Toggle do item atual
-        const wasActive = faqItem.classList.contains('active');
-        faqItem.classList.toggle('active');
-        faqAnswer.classList.toggle('active');
+        if (isCurrentlyActive) {
+            // Fechar o item atual
+            faqItem.classList.remove('active');
+            faqAnswer.classList.remove('active');
+            faqIcon.style.transform = 'rotate(0deg)';
+            element.setAttribute('aria-expanded', 'false');
+        } else {
+            // Abrir o item atual
+            faqItem.classList.add('active');
+            faqAnswer.classList.add('active');
+            faqIcon.style.transform = 'rotate(45deg)';
+            element.setAttribute('aria-expanded', 'true');
+        }
         
-        console.log('Item ativo:', !wasActive);
+        console.log('Item ativo:', !isCurrentlyActive);
         console.log('Classes do item:', faqItem.className);
         console.log('Classes da resposta:', faqAnswer.className);
         
-        // Atualizar aria-expanded
-        const isExpanded = faqAnswer.classList.contains('active');
-        element.setAttribute('aria-expanded', isExpanded);
-        
-        if (isExpanded) {
-            faqIcon.style.transform = 'rotate(45deg)';
-        } else {
-            faqIcon.style.transform = 'rotate(0deg)';
-        }
     } catch (error) {
         console.error('Erro ao alternar FAQ:', error);
     }
@@ -508,3 +512,29 @@ function limparFormulario() {
         }
     }
 }
+
+// Função de teste para o FAQ
+function testFAQ() {
+    console.log('=== TESTE DO FAQ ===');
+    const faqItems = document.querySelectorAll('.faq-item');
+    console.log('Total de itens FAQ encontrados:', faqItems.length);
+    
+    faqItems.forEach((item, index) => {
+        const question = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+        const icon = item.querySelector('.faq-icon');
+        
+        console.log(`Item ${index + 1}:`, {
+            question: question ? '✅' : '❌',
+            answer: answer ? '✅' : '❌',
+            icon: icon ? '✅' : '❌',
+            classes: item.className
+        });
+    });
+}
+
+// Executar teste quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Página carregada, executando teste do FAQ...');
+    setTimeout(testFAQ, 1000); // Aguardar 1 segundo para garantir que tudo carregou
+});

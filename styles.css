@@ -943,18 +943,19 @@ section {
 }
 
 .faq-answer {
-    padding: 0 2rem;
+    padding: 0;
     max-height: 0;
     overflow: hidden;
     transition: all 0.4s ease;
     background: var(--bg-darker);
+    opacity: 0;
 }
 
 .faq-answer.active {
     padding: 2rem;
-    max-height: 1000px;
+    max-height: 500px;
     opacity: 1;
-    visibility: visible;
+    overflow: visible;
 }
 
 /* Regra de teste para garantir visibilidade */
@@ -962,6 +963,8 @@ section {
     display: block !important;
     max-height: none !important;
     overflow: visible !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .faq-answer p {
