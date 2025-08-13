@@ -7,15 +7,17 @@
 
 :root {
     --primary-color: #FFD700;
-    --text-white: #1A1A1A;
-    --text-gray: #4A4A4A;
-    --bg-dark: #FFFFFF;
-    --bg-darker: #F8F9FA;
-    --bg-card: #FFFFFF;
-    --bg-card-hover: #F1F3F4;
-    --border-color: #E1E5E9;
-    --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    --shadow-hover: 0 20px 40px rgba(255, 215, 0, 0.2);
+    --secondary-color: #64FFDA;
+    --accent-color: #FF6B6B;
+    --bg-dark: #0A0A0A;
+    --bg-darker: #050505;
+    --bg-card: #1A1A1A;
+    --bg-card-hover: #252525;
+    --border-color: #333;
+    --text-white: #000000;
+    --text-gray: #000000;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.4);
 }
 
 body {
@@ -167,6 +169,23 @@ p {
     background: #E6C200;
     transform: translateY(-3px);
     box-shadow: 0 12px 35px rgba(255, 215, 0, 0.4);
+}
+
+.hero-cta:focus {
+    outline: none;
+    border-color: #000000;
+    color: #000000;
+}
+
+.hero-cta:active {
+    transform: translateY(-1px);
+}
+
+.hero-cta:disabled {
+    background: #ccc;
+    color: #000000;
+    cursor: not-allowed;
+    transform: none;
 }
 
 /* Ocultar a imagem HTML já que agora usamos background-image */
@@ -1612,25 +1631,25 @@ html {
 .form-message.success {
     background: rgba(100, 255, 218, 0.1);
     border: 2px solid #64FFDA;
-    color: #64FFDA;
+    color: #000000;
 }
 
 .form-message.error {
     background: rgba(255, 107, 107, 0.1);
     border: 2px solid #ff6b6b;
-    color: #ff6b6b;
+    color: #000000;
 }
 
 .form-message.loading {
     background: rgba(255, 215, 0, 0.1);
     border: 2px solid var(--primary-color);
-    color: var(--primary-color);
+    color: #000000;
 }
 
 /* Estilos para campos opcionais */
 .optional-text {
     font-size: 0.85rem;
-    color: #666;
+    color: #000000;
     font-weight: 400;
     font-style: italic;
 }
