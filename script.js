@@ -437,6 +437,10 @@ function toggleFAQ(element) {
                 const icon = item.querySelector('.faq-icon');
                 if (answer && icon) {
                     answer.classList.remove('active');
+                    // Aplicar estilos inline para ocultar
+                    answer.style.display = 'none';
+                    answer.style.visibility = 'hidden';
+                    answer.style.opacity = '0';
                     icon.style.transform = 'rotate(0deg)';
                 }
             }
@@ -447,12 +451,23 @@ function toggleFAQ(element) {
             // Fechar o item atual
             faqItem.classList.remove('active');
             faqAnswer.classList.remove('active');
+            // Aplicar estilos inline para ocultar
+            faqAnswer.style.display = 'none';
+            faqAnswer.style.visibility = 'hidden';
+            faqAnswer.style.opacity = '0';
             faqIcon.style.transform = 'rotate(0deg)';
             element.setAttribute('aria-expanded', 'false');
         } else {
             // Abrir o item atual
             faqItem.classList.add('active');
             faqAnswer.classList.add('active');
+            // Aplicar estilos inline para mostrar
+            faqAnswer.style.display = 'block';
+            faqAnswer.style.visibility = 'visible';
+            faqAnswer.style.opacity = '1';
+            faqAnswer.style.height = 'auto';
+            faqAnswer.style.maxHeight = 'none';
+            faqAnswer.style.overflow = 'visible';
             faqIcon.style.transform = 'rotate(45deg)';
             element.setAttribute('aria-expanded', 'true');
         }
@@ -460,6 +475,11 @@ function toggleFAQ(element) {
         console.log('Item ativo:', !isCurrentlyActive);
         console.log('Classes do item:', faqItem.className);
         console.log('Classes da resposta:', faqAnswer.className);
+        console.log('Estilos inline da resposta:', {
+            display: faqAnswer.style.display,
+            visibility: faqAnswer.style.visibility,
+            opacity: faqAnswer.style.opacity
+        });
         
     } catch (error) {
         console.error('Erro ao alternar FAQ:', error);

@@ -942,17 +942,29 @@ section {
     transform: rotate(45deg);
 }
 
+/* Regras principais do FAQ - com máxima especificidade */
 .faq-answer {
-    display: none;
-    padding: 2rem;
-    background: var(--bg-darker);
-    opacity: 1;
-    visibility: visible;
-    transition: all 0.3s ease;
+    display: none !important;
+    padding: 2rem !important;
+    background: var(--bg-darker) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transition: all 0.3s ease !important;
 }
 
-.faq-answer.active {
-    display: block;
+/* Regra para respostas ativas - com máxima especificidade */
+.faq-answer.active,
+.faq-item.active .faq-answer,
+div.faq-answer.active,
+div.faq-item.active div.faq-answer,
+section#faq .faq-item.active .faq-answer,
+section#faq .faq-answer.active {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
 }
 
 /* Regra de teste para garantir visibilidade */
