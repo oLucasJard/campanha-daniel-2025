@@ -39,21 +39,14 @@ document.querySelectorAll('.service-card, .stat, .about-image').forEach(el => {
     observer.observe(el);
 });
 
-
-
-
-
-
-}
-
 // Efeito de parallax sutil no hero
 window.addEventListener('scroll', function() {
     const scrolled = window.pageYOffset;
-    const heroVisual = document.querySelector('.hero-visual');
+    const heroImageContainer = document.querySelector('.hero-image-container');
     
-    if (heroVisual) {
+    if (heroImageContainer) {
         const rate = scrolled * -0.5;
-        heroVisual.style.transform = `translateY(${rate}px)`;
+        heroImageContainer.style.transform = `translateY(${rate}px)`;
     }
 });
 
@@ -180,14 +173,17 @@ window.addEventListener('scroll', function() {
     }
 });
 
-// Funcionalidades do Formulário de Testemunhos
+// Funcionalidades do Formulário de Testemunhos - Integração com Google Sheets
 document.addEventListener('DOMContentLoaded', function() {
-    const testemunhoForm = document.getElementById('testemunhoForm');
+    const testimonyForm = document.getElementById('testimonyForm');
     const testemunhoTextarea = document.getElementById('testemunho');
     const charCount = document.getElementById('char-count');
-    const testemunhoPreview = document.getElementById('testemunhoPreview');
+    const formMessage = document.getElementById('form-message');
     
-    if (testemunhoForm && testemunhoTextarea) {
+    // URL do Google Apps Script
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwlFAIqiILcRjUH3h1FSAvdohAijAnzvXS3qiD96t45g2PhE5ri7z2P2QCIR3r15rygSg/exec';
+    
+    if (testimonyForm && testemunhoTextarea) {
         // Contador de caracteres
         testemunhoTextarea.addEventListener('input', function() {
             const length = this.value.length;
@@ -203,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         // Validação em tempo real
-        const inputs = testemunhoForm.querySelectorAll('input, textarea, select');
+        const inputs = testimonyForm.querySelectorAll('input, textarea, select');
         inputs.forEach(input => {
             input.addEventListener('blur', function() {
                 validateField(this);
@@ -214,16 +210,86 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
         
-        // Envio do formulário
-        testemunhoForm.addEventListener('submit', function(e) {
+        // Envio do formulário para Google Sheets
+        testimonyForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             if (validateForm()) {
-                showPreview();
+                submitToGoogleSheets();
             }
         });
     }
 });
+
+// Função para enviar dados para o Google Sheets
+function submitToGoogleSheets() {
+    const form = document.getElementById('testimonyForm');
+    const formMessage = document.getElementById('form-message');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+    
+    // Adiciona timestamp
+    document.getElementById('timestamp').value = new Date().toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"});
+    
+    // Mostra mensagem de carregamento
+    showFormMessage('Enviando seu testemunho, aguarde...', 'loading');
+    
+    // Desabilita botão e mostra loading
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="btn-icon">⏳</span> Enviando...';
+    
+    // URL do Google Apps Script
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwlFAIqiILcRjUH3h1FSAvdohAijAnzvXS3qiD96t45g2PhE5ri7z2P2QCIR3r15rygSg/exec';
+    
+    fetch(scriptURL, { 
+        method: 'POST', 
+        body: new FormData(form)
+    })
+    .then(response => {
+        console.log('Success!', response);
+        showFormMessage('Testemunho enviado com sucesso! Deus abençoe. 🙏', 'success');
+        form.reset();
+        document.getElementById('char-count').textContent = '0';
+        
+        // Limpa erros
+        clearAllErrors();
+    })
+    .catch(error => {
+        console.error('Error!', error.message);
+        showFormMessage('Ocorreu um erro ao enviar seu testemunho. Tente novamente.', 'error');
+    })
+    .finally(() => {
+        // Restaura botão
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+    });
+}
+
+// Função para mostrar mensagens do formulário
+function showFormMessage(message, type) {
+    const formMessage = document.getElementById('form-message');
+    formMessage.textContent = message;
+    formMessage.className = `form-message ${type}`;
+    formMessage.style.display = 'block';
+    
+    // Auto-hide para mensagens de sucesso
+    if (type === 'success') {
+        setTimeout(() => {
+            formMessage.style.display = 'none';
+        }, 5000);
+    }
+}
+
+// Função para limpar todos os erros
+function clearAllErrors() {
+    document.querySelectorAll('.form-error').forEach(error => {
+        error.textContent = '';
+    });
+    
+    document.querySelectorAll('input, textarea, select').forEach(field => {
+        field.style.borderColor = 'var(--border-color)';
+    });
+}
 
 // Validação de campos individuais
 function validateField(field) {
@@ -296,98 +362,6 @@ function validateForm() {
     return isValid;
 }
 
-// Mostrar prévia do testemunho
-function showPreview() {
-    const nome = document.getElementById('nome').value;
-    const categoria = document.getElementById('categoria').value;
-    const testemunho = document.getElementById('testemunho').value;
-    
-    // Atualizar prévia
-    document.getElementById('preview-nome').textContent = nome;
-    document.getElementById('preview-categoria').textContent = getCategoriaLabel(categoria);
-    document.getElementById('preview-testemunho').textContent = testemunho;
-    
-    // Mostrar prévia e esconder formulário
-    document.getElementById('testemunhoForm').style.display = 'none';
-    document.getElementById('testemunhoPreview').style.display = 'block';
-}
-
-// Obter label da categoria
-function getCategoriaLabel(value) {
-    const categorias = {
-        'cura': '🩹 Cura e Saúde',
-        'familia': '👨‍👩‍👧‍👦 Família',
-        'financas': '💰 Finanças',
-        'espiritual': '🙏 Crescimento Espiritual',
-        'relacionamentos': '💕 Relacionamentos',
-        'trabalho': '💼 Trabalho e Carreira',
-        'outros': '✨ Outros'
-    };
-    return categorias[value] || 'Não especificado';
-}
-
-// Editar formulário
-function editarFormulario() {
-    document.getElementById('testemunhoForm').style.display = 'block';
-    document.getElementById('testemunhoPreview').style.display = 'none';
-}
-
-// Confirmar envio
-function confirmarEnvio() {
-    // Simular envio
-    const loadingBtn = document.querySelector('.preview-actions .btn-primary');
-    const originalText = loadingBtn.innerHTML;
-    
-    loadingBtn.innerHTML = '<span class="btn-icon">⏳</span> Enviando...';
-    loadingBtn.disabled = true;
-    
-    setTimeout(() => {
-        // Sucesso
-        showSuccessMessage();
-        resetForm();
-    }, 2000);
-}
-
-// Mostrar mensagem de sucesso
-function showSuccessMessage() {
-    const preview = document.getElementById('testemunhoPreview');
-    preview.innerHTML = `
-        <div class="success-message">
-            <div class="success-icon">✅</div>
-            <h4>Testemunho Enviado com Sucesso!</h4>
-            <p>Obrigado por compartilhar sua experiência de fé. Seu testemunho será revisado e pode ser publicado para inspirar outras pessoas.</p>
-            <button type="button" class="btn btn-primary" onclick="resetForm()">
-                Enviar Outro Testemunho
-            </button>
-        </div>
-    `;
-}
-
-// Resetar formulário
-function resetForm() {
-    document.getElementById('testemunhoForm').reset();
-    document.getElementById('char-count').textContent = '0';
-    document.getElementById('testemunhoForm').style.display = 'block';
-    document.getElementById('testemunhoPreview').style.display = 'none';
-    
-    // Limpar erros
-    document.querySelectorAll('.form-error').forEach(error => {
-        error.textContent = '';
-    });
-    
-    // Resetar bordas
-    document.querySelectorAll('input, textarea, select').forEach(field => {
-        field.style.borderColor = 'var(--border-color)';
-    });
-}
-
-// Limpar formulário
-function limparFormulario() {
-    if (confirm('Tem certeza que deseja limpar todos os campos?')) {
-        resetForm();
-    }
-}
-
 // Preloader simples (opcional)
 window.addEventListener('load', function() {
     const preloader = document.querySelector('.preloader');
@@ -423,29 +397,44 @@ document.head.appendChild(keyboardStyle);
 
 // Funcionalidade do FAQ Accordion
 function toggleFAQ(element) {
-    const faqItem = element.parentElement;
-    const faqAnswer = faqItem.querySelector('.faq-answer');
-    const faqIcon = element.querySelector('.faq-icon');
-    
-    // Fechar todos os outros itens
-    document.querySelectorAll('.faq-item').forEach(item => {
-        if (item !== faqItem) {
-            item.classList.remove('active');
-            const answer = item.querySelector('.faq-answer');
-            const icon = item.querySelector('.faq-icon');
-            answer.classList.remove('active');
-            icon.style.transform = 'rotate(0deg)';
+    try {
+        const faqItem = element.parentElement;
+        const faqAnswer = faqItem.querySelector('.faq-answer');
+        const faqIcon = element.querySelector('.faq-icon');
+        
+        if (!faqAnswer || !faqIcon) {
+            console.error('Elementos do FAQ não encontrados');
+            return;
         }
-    });
-    
-    // Toggle do item atual
-    faqItem.classList.toggle('active');
-    faqAnswer.classList.toggle('active');
-    
-    if (faqAnswer.classList.contains('active')) {
-        faqIcon.style.transform = 'rotate(45deg)';
-    } else {
-        faqIcon.style.transform = 'rotate(0deg)';
+        
+        // Fechar todos os outros itens
+        document.querySelectorAll('.faq-item').forEach(item => {
+            if (item !== faqItem) {
+                item.classList.remove('active');
+                const answer = item.querySelector('.faq-answer');
+                const icon = item.querySelector('.faq-icon');
+                if (answer && icon) {
+                    answer.classList.remove('active');
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            }
+        });
+        
+        // Toggle do item atual
+        faqItem.classList.toggle('active');
+        faqAnswer.classList.toggle('active');
+        
+        // Atualizar aria-expanded
+        const isExpanded = faqAnswer.classList.contains('active');
+        element.setAttribute('aria-expanded', isExpanded);
+        
+        if (isExpanded) {
+            faqIcon.style.transform = 'rotate(45deg)';
+        } else {
+            faqIcon.style.transform = 'rotate(0deg)';
+        }
+    } catch (error) {
+        console.error('Erro ao alternar FAQ:', error);
     }
 }
 
@@ -459,3 +448,39 @@ document.addEventListener('keydown', function(e) {
         }
     }
 });
+
+// Adicionar funcionalidade de clique para todos os elementos FAQ
+document.addEventListener('DOMContentLoaded', function() {
+    // Adicionar event listeners para todos os elementos FAQ
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', function() {
+            toggleFAQ(this);
+        });
+        
+        // Adicionar suporte para teclado
+        question.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleFAQ(this);
+            }
+        });
+    });
+});
+
+// Função para limpar formulário
+function limparFormulario() {
+    if (confirm('Tem certeza que deseja limpar todos os campos?')) {
+        const form = document.getElementById('testimonyForm');
+        form.reset();
+        document.getElementById('char-count').textContent = '0';
+        
+        // Limpa erros
+        clearAllErrors();
+        
+        // Esconde mensagem de status
+        const formMessage = document.getElementById('form-message');
+        if (formMessage) {
+            formMessage.style.display = 'none';
+        }
+    }
+}
