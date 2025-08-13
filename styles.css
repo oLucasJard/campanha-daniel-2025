@@ -942,17 +942,16 @@ section {
     transform: rotate(45deg);
 }
 
-/* Regras principais do FAQ - com máxima especificidade */
+/* Regras principais do FAQ - sem animações */
 .faq-answer {
     display: none !important;
     padding: 2rem !important;
     background: var(--bg-darker) !important;
     opacity: 1 !important;
     visibility: visible !important;
-    transition: all 0.3s ease !important;
 }
 
-/* Regra para respostas ativas - com máxima especificidade */
+/* Regra para respostas ativas - sem animações */
 .faq-answer.active,
 .faq-item.active .faq-answer,
 div.faq-answer.active,

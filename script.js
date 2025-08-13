@@ -408,7 +408,7 @@ keyboardStyle.textContent = `
 `;
 document.head.appendChild(keyboardStyle);
 
-// Funcionalidade do FAQ Accordion
+// Funcionalidade do FAQ Accordion - sem animações
 function toggleFAQ(element) {
     try {
         console.log('toggleFAQ chamada para:', element);
@@ -437,10 +437,8 @@ function toggleFAQ(element) {
                 const icon = item.querySelector('.faq-icon');
                 if (answer && icon) {
                     answer.classList.remove('active');
-                    // Aplicar estilos inline com !important para ocultar
+                    // Ocultar resposta diretamente
                     answer.style.setProperty('display', 'none', 'important');
-                    answer.style.setProperty('visibility', 'hidden', 'important');
-                    answer.style.setProperty('opacity', '0', 'important');
                     icon.style.transform = 'rotate(0deg)';
                 }
             }
@@ -451,23 +449,16 @@ function toggleFAQ(element) {
             // Fechar o item atual
             faqItem.classList.remove('active');
             faqAnswer.classList.remove('active');
-            // Aplicar estilos inline com !important para ocultar
+            // Ocultar resposta diretamente
             faqAnswer.style.setProperty('display', 'none', 'important');
-            faqAnswer.style.setProperty('visibility', 'hidden', 'important');
-            faqAnswer.style.setProperty('opacity', '0', 'important');
             faqIcon.style.transform = 'rotate(0deg)';
             element.setAttribute('aria-expanded', 'false');
         } else {
             // Abrir o item atual
             faqItem.classList.add('active');
             faqAnswer.classList.add('active');
-            // Aplicar estilos inline com !important para mostrar
+            // Mostrar resposta diretamente
             faqAnswer.style.setProperty('display', 'block', 'important');
-            faqAnswer.style.setProperty('visibility', 'visible', 'important');
-            faqAnswer.style.setProperty('opacity', '1', 'important');
-            faqAnswer.style.setProperty('height', 'auto', 'important');
-            faqAnswer.style.setProperty('max-height', 'none', 'important');
-            faqAnswer.style.setProperty('overflow', 'visible', 'important');
             faqIcon.style.transform = 'rotate(45deg)';
             element.setAttribute('aria-expanded', 'true');
         }
@@ -476,17 +467,13 @@ function toggleFAQ(element) {
         console.log('Classes do item:', faqItem.className);
         console.log('Classes da resposta:', faqAnswer.className);
         console.log('Estilos inline da resposta:', {
-            display: faqAnswer.style.display,
-            visibility: faqAnswer.style.visibility,
-            opacity: faqAnswer.style.opacity
+            display: faqAnswer.style.display
         });
         
         // Verificar se os estilos foram aplicados
         const computedStyle = window.getComputedStyle(faqAnswer);
         console.log('Estilos computados da resposta:', {
-            display: computedStyle.display,
-            visibility: computedStyle.visibility,
-            opacity: computedStyle.opacity
+            display: computedStyle.display
         });
         
     } catch (error) {
