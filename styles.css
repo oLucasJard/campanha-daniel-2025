@@ -949,13 +949,15 @@ section {
     transition: all 0.4s ease;
     background: var(--bg-darker);
     opacity: 0;
+    visibility: hidden;
 }
 
 .faq-answer.active {
     padding: 2rem;
-    max-height: 500px;
+    max-height: 1000px;
     opacity: 1;
     overflow: visible;
+    visibility: visible;
 }
 
 /* Regra de teste para garantir visibilidade */
@@ -965,6 +967,30 @@ section {
     overflow: visible !important;
     opacity: 1 !important;
     visibility: visible !important;
+    height: auto !important;
+}
+
+/* Regras adicionais para garantir visibilidade */
+.faq-item.active .faq-answer {
+    display: block !important;
+    max-height: none !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    height: auto !important;
+    padding: 2rem !important;
+}
+
+/* Forçar visibilidade com maior especificidade */
+div.faq-answer.active,
+div.faq-item.active div.faq-answer {
+    display: block !important;
+    max-height: none !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    height: auto !important;
+    padding: 2rem !important;
 }
 
 .faq-answer p {
