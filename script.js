@@ -430,4 +430,151 @@ function testFAQ() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Página carregada, executando teste do FAQ...');
     setTimeout(testFAQ, 1000); // Aguardar 1 segundo para garantir que tudo carregou
+    
+    // Inicializar formulário de jovens
+    initializeJovensForm();
 });
+
+// ===== FUNCIONALIDADES DO FORMULÁRIO DE JOVENS =====
+
+function initializeJovensForm() {
+    const form = document.getElementById('formularioIndicacaoJovens');
+    if (!form) return;
+    
+    // Adicionar listener para envio
+    form.addEventListener('submit', handleJovensFormSubmit);
+    
+    // Adicionar formatação automática para telefones
+    const telefones = form.querySelectorAll('input[type="tel"]');
+    telefones.forEach(telefone => {
+        telefone.addEventListener('input', () => formatarTelefone(telefone));
+    });
+    
+    // Adicionar validação em tempo real
+    const camposObrigatorios = form.querySelectorAll('[required]');
+    camposObrigatorios.forEach(campo => {
+        campo.addEventListener('blur', () => validateJovensField(campo));
+        campo.addEventListener('input', () => clearJovensFieldError(campo));
+    });
+}
+
+function handleJovensFormSubmit(e) {
+    e.preventDefault();
+    
+    if (!validateJovensForm()) {
+        return;
+    }
+    
+    // Mostrar loading
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '⏳ Enviando...';
+    submitBtn.disabled = true;
+    
+    // Simular envio (aqui você pode integrar com Google Sheets)
+    setTimeout(() => {
+        showJovensSuccessMessage();
+        e.target.reset();
+        
+        // Restaurar botão
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    }, 2000);
+}
+
+function validateJovensForm() {
+    const form = document.getElementById('formularioIndicacaoJovens');
+    const camposObrigatorios = [
+        'nomeJovem',
+        'idadeJovem',
+        'enderecoJovem',
+        'bairroJovem',
+        'motivoIndicacao',
+        'nomeIndicador',
+        'telefoneIndicador'
+    ];
+    
+    let valido = true;
+    
+    camposObrigatorios.forEach(campoId => {
+        const campo = document.getElementById(campoId);
+        if (campo && !validateJovensField(campo)) {
+            valido = false;
+        }
+    });
+    
+    // Validação específica para idade
+    const idade = document.getElementById('idadeJovem');
+    if (idade && (idade.value < 12 || idade.value > 35)) {
+        showJovensFieldError(idade, 'A idade deve estar entre 12 e 35 anos');
+        valido = false;
+    }
+    
+    return valido;
+}
+
+function validateJovensField(field) {
+    if (!field.value.trim()) {
+        showJovensFieldError(field, 'Este campo é obrigatório');
+        return false;
+    }
+    
+    clearJovensFieldError(field);
+    return true;
+}
+
+function showJovensFieldError(field, message) {
+    clearJovensFieldError(field);
+    
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'field-error';
+    errorDiv.textContent = message;
+    errorDiv.style.color = '#ff6b6b';
+    errorDiv.style.fontSize = '0.85rem';
+    errorDiv.style.marginTop = '5px';
+    
+    field.parentNode.appendChild(errorDiv);
+    field.style.borderColor = '#ff6b6b';
+}
+
+function clearJovensFieldError(field) {
+    const existingError = field.parentNode.querySelector('.field-error');
+    if (existingError) {
+        existingError.remove();
+    }
+    field.style.borderColor = 'var(--border-color)';
+}
+
+function formatarTelefone(input) {
+    let valor = input.value.replace(/\D/g, '');
+    
+    if (valor.length <= 11) {
+        valor = valor.replace(/^(\d{2})(\d)/g, '($1) $2');
+        valor = valor.replace(/(\d)(\d{4})$/, '$1-$2');
+    }
+    
+    input.value = valor;
+}
+
+function showJovensSuccessMessage() {
+    const messageDiv = document.getElementById('formMessageJovens');
+    if (messageDiv) {
+        messageDiv.innerHTML = `
+            <div style="background: #d4edda; color: #155724; padding: 20px; border-radius: 8px; text-align: center; margin-top: 20px;">
+                <h4>✅ Indicação Enviada com Sucesso!</h4>
+                <p>Obrigado por nos ajudar a alcançar mais jovens! Nossa equipe entrará em contato em até 48 horas para confirmar os detalhes e agendar uma visita.</p>
+                <div style="margin-top: 20px;">
+                    <p><strong>Próximos passos:</strong></p>
+                    <ul style="text-align: left; display: inline-block;">
+                        <li>📞 Entraremos em contato em até 48 horas</li>
+                        <li>📅 Confirmaremos os detalhes da visita</li>
+                        <li>👥 Nossa equipe treinada fará a visita</li>
+                        <li>💝 Acompanhamento contínuo após a visita</li>
+                    </ul>
+                </div>
+            </div>
+        `;
+        messageDiv.style.display = 'block';
+        messageDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+}
