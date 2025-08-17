@@ -22,25 +22,16 @@ Este guia explica como integrar o formulário de indicação de jovens com o Goo
 
 #### **Estrutura da Planilha:**
 ```
-A1: Nome do Jovem
-B1: Idade
-C1: Telefone do Jovem
-D1: Endereço
-E1: Bairro
+A1: Timestamp
+B1: Nome do Jovem
+C1: Idade
+D1: Telefone do Jovem
+E1: Endereço
 F1: Situação Atual
-G1: Motivo da Indicação
-H1: Nome do Indicador
-I1: Telefone do Indicador
-J1: Relação com o Jovem
-K1: Observações
-L1: Data da Indicação
-M1: Hora da Indicação
-N1: Status
-O1: Data da Visita
-P1: Responsável pela Visita
-Q1: Observações da Visita
-R1: Resultado
-S1: Próximo Acompanhamento
+G1: Nome do Indicador
+H1: Telefone do Indicador
+I1: Relação com o Jovem
+J1: Observações
 ```
 
 ### **2. Configurar Google Apps Script**
@@ -60,25 +51,16 @@ function doPost(e) {
     
     // Prepara os dados para inserção
     const linha = [
-      dados['Nome do Jovem'] || '',
-      dados['Idade'] || '',
-      dados['Telefone do Jovem'] || '',
-      dados['Endereço'] || '',
-      dados['Bairro'] || '',
-      dados['Situação Atual'] || '',
-      dados['Motivo da Indicação'] || '',
-      dados['Nome do Indicador'] || '',
-      dados['Telefone do Indicador'] || '',
-      dados['Relação com o Jovem'] || '',
-      dados['Observações'] || '',
-      dados['Data da Indicação'] || '',
-      dados['Hora da Indicação'] || '',
-      dados['Status'] || 'Nova Indicação',
-      '', // Data da Visita (preenchida manualmente)
-      '', // Responsável pela Visita (preenchido manualmente)
-      '', // Observações da Visita (preenchido manualmente)
-      '', // Resultado (preenchido manualmente)
-      ''  // Próximo Acompanhamento (preenchido manualmente)
+      dados['Timestamp'] || new Date().toLocaleString("pt-BR", {timeZone: "America/Sao_Paulo"}),
+      dados['NomeJovem'] || '',
+      dados['IdadeJovem'] || '',
+      dados['TelefoneJovem'] || '',
+      dados['EnderecoJovem'] || '',
+      dados['SituacaoJovem'] || '',
+      dados['NomeIndicador'] || '',
+      dados['TelefoneIndicador'] || '',
+      dados['RelacaoJovem'] || '',
+      dados['Observacoes'] || ''
     ];
     
     // Insere a nova linha
@@ -109,21 +91,18 @@ function enviarNotificacao(dados) {
       <h2>Nova Indicação de Jovem Recebida!</h2>
       
       <h3>📋 Dados do Jovem:</h3>
-      <p><strong>Nome:</strong> ${dados['Nome do Jovem']}</p>
-      <p><strong>Idade:</strong> ${dados['Idade']} anos</p>
-      <p><strong>Telefone:</strong> ${dados['Telefone do Jovem'] || 'Não informado'}</p>
-      <p><strong>Endereço:</strong> ${dados['Endereço']}, ${dados['Bairro']}</p>
-      <p><strong>Situação:</strong> ${dados['Situação Atual'] || 'Não informada'}</p>
-      
-      <h3>💝 Motivo da Indicação:</h3>
-      <p>${dados['Motivo da Indicação']}</p>
+      <p><strong>Nome:</strong> ${dados['NomeJovem']}</p>
+      <p><strong>Idade:</strong> ${dados['IdadeJovem']} anos</p>
+      <p><strong>Telefone:</strong> ${dados['TelefoneJovem'] || 'Não informado'}</p>
+      <p><strong>Endereço:</strong> ${dados['EnderecoJovem']}</p>
+      <p><strong>Situação:</strong> ${dados['SituacaoJovem'] || 'Não informada'}</p>
       
       <h3>👤 Dados do Indicador:</h3>
-      <p><strong>Nome:</strong> ${dados['Nome do Indicador']}</p>
-      <p><strong>Telefone:</strong> ${dados['Telefone do Indicador']}</p>
-      <p><strong>Relação:</strong> ${dados['Relação com o Jovem'] || 'Não informada'}</p>
+      <p><strong>Nome:</strong> ${dados['NomeIndicador']}</p>
+      <p><strong>Telefone:</strong> ${dados['TelefoneIndicador']}</p>
+      <p><strong>Relação:</strong> ${dados['RelacaoJovem'] || 'Não informada'}</p>
       
-      ${dados['Observações'] ? `<h3>📝 Observações:</h3><p>${dados['Observações']}</p>` : ''}
+      ${dados['Observacoes'] ? `<h3>📝 Observações:</h3><p>${dados['Observacoes']}</p>` : ''}
       
       <h3>📅 Próximos Passos:</h3>
       <ol>
@@ -134,7 +113,7 @@ function enviarNotificacao(dados) {
       </ol>
       
       <hr>
-      <p><em>Indicação recebida em ${dados['Data da Indicação']} às ${dados['Hora da Indicação']}</em></p>
+      <p><em>Indicação recebida em ${dados['Timestamp']}</em></p>
       <p><strong>MANT Paraíso - Ministério de Jovens</strong></p>
     `;
     
@@ -204,15 +183,15 @@ const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/SEU_SCRIPT_ID
 function validarDados(dados) {
   const erros = [];
   
-  if (!dados['Nome do Jovem'] || dados['Nome do Jovem'].trim() === '') {
+  if (!dados['NomeJovem'] || dados['NomeJovem'].trim() === '') {
     erros.push('Nome do jovem é obrigatório');
   }
   
-  if (!dados['Idade'] || dados['Idade'] < 12 || dados['Idade'] > 35) {
+  if (!dados['IdadeJovem'] || dados['IdadeJovem'] < 12 || dados['IdadeJovem'] > 35) {
     erros.push('Idade deve estar entre 12 e 35 anos');
   }
   
-  if (!dados['Endereço'] || dados['Endereço'].trim() === '') {
+  if (!dados['EnderecoJovem'] || dados['EnderecoJovem'].trim() === '') {
     erros.push('Endereço é obrigatório');
   }
   
